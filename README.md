@@ -1,106 +1,202 @@
-Kerwindows Task Manager
-A simple web-based task management application built with PHP, MySQL, and JavaScript, designed to run on an Apache server. Users can create, edit, delete, and mark tasks as completed, with a clean interface and dark/light mode support.
-Features
+# Task Manager
 
-Add new tasks with text descriptions
-Edit existing tasks
-Delete tasks
-Mark tasks as completed
-Toggle between dark and light modes
-Responsive design for desktop and mobile
-Error handling for invalid inputs
-Persistent storage using MySQL
+A simple, responsive task management application built with PHP, MySQL, and Vue.js. Features a clean interface with dark/light theme support and full CRUD operations for managing your daily tasks.
 
-Prerequisites
+## Features
 
-Apache web server
-PHP 8.2 or higher
-MySQL 8.0 or higher
-phpMyAdmin (optional, for easier database management)
+- ✅ Add, edit, delete, and toggle task completion
+- 🌙 Dark/Light theme toggle with persistent preferences
+- 📱 Fully responsive design for mobile and desktop
+- 🔄 Real-time updates with RESTful API
+- 💾 Persistent data storage with MySQL
+- 🎨 Modern, clean UI with smooth animations
 
-Installation
+## Screenshots
 
-Clone or Download the Repository
+The application features a clean, modern interface with:
+- Task input form at the top
+- List of tasks with checkboxes for completion
+- Edit and delete buttons for each task
+- Theme toggle in the header
+- Responsive design that works on all devices
 
-Copy the project files to your Apache server's document root (e.g., /var/www/html/kerwindows_task_manager).
+## Requirements
 
+- **Web Server**: Apache (with mod_rewrite enabled)
+- **PHP**: Version 7.4 or higher
+- **MySQL**: Version 5.7 or higher
+- **Extensions**: PDO MySQL extension enabled
 
-Set Up the Database
+## Installation
 
-Create a MySQL database named kerwindows_task_manager.
-Import the provided kerwindows_task_manager.sql file to set up the tasks table:mysql -u your_username -p kerwindows_task_manager < kerwindows_task_manager.sql
+### 1. Clone or Download
+Download the project files to your web server directory (e.g., `/var/www/html/task-manager/` or `htdocs/task-manager/`).
 
+### 2. Database Setup
+1. Create a MySQL database named `kerwindows_task_manager`
+2. Create a MySQL user with appropriate permissions
+3. Import the database schema:
+   ```bash
+   mysql -u your_username -p kerwindows_task_manager < kerwindows_task_manager.sql
+   ```
 
-Ensure the MySQL user has appropriate permissions for the database.
+### 3. Configure Database Connection
+Edit the `api.php` file and update the database credentials:
 
+```php
+// Database configuration
+$host = 'localhost';                    // Your MySQL host
+$dbname = 'kerwindows_task_manager';    // Database name
+$username = 'your_username';            // Your MySQL username
+$password = 'your_password';            // Your MySQL password
+```
 
-Configure Database Connection
+### 4. File Permissions
+Ensure your web server has read/write permissions to the project directory:
+```bash
+chmod 755 /path/to/task-manager/
+chmod 644 /path/to/task-manager/*.php
+chmod 644 /path/to/task-manager/*.html
+```
 
-Open api.php and update the database configuration with your MySQL credentials:$host = 'localhost';
-$dbname = 'kerwindows_task_manager';
-$username = 'your_mysql_username';
-$password = 'your_mysql_password';
+### 5. Access the Application
+Open your web browser and navigate to:
+```
+http://your-domain.com/task-manager/
+```
+or
+```
+http://localhost/task-manager/
+```
 
+## File Structure
 
+```
+task-manager/
+├── index.html                 # Frontend application (Vue.js)
+├── api.php                   # Backend API (PHP)
+├── kerwindows_task_manager.sql # Database schema
+└── README.md                 # This file
+```
 
+## API Endpoints
 
-Set Up Apache
+The application uses a RESTful API with the following endpoints:
 
-Ensure Apache is configured to serve PHP files.
-Place the project files in the Apache document root or a subdirectory.
-Verify that the .htaccess file (if used) allows CORS or adjust api.php headers as needed.
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET    | `/api.php` | Retrieve all tasks |
+| POST   | `/api.php` | Create a new task |
+| PUT    | `/api.php?id={id}` | Update an existing task |
+| DELETE | `/api.php?id={id}` | Delete a task |
 
+### API Examples
 
-File Structure
+**Create a task:**
+```bash
+curl -X POST http://your-domain.com/task-manager/api.php \
+  -H "Content-Type: application/json" \
+  -d '{"text":"Buy groceries"}'
+```
 
-index.html: Frontend interface (contains embedded JavaScript and HTML).
-api.php: Backend API for CRUD operations.
-kerwindows_task_manager.sql: Database schema and setup.
+**Toggle task completion:**
+```bash
+curl -X PUT http://your-domain.com/task-manager/api.php?id=1 \
+  -H "Content-Type: application/json" \
+  -d '{"completed":true}'
+```
 
+**Delete a task:**
+```bash
+curl -X DELETE http://your-domain.com/task-manager/api.php?id=1
+```
 
-Permissions
+## Database Schema
 
-Ensure the Apache user (e.g., www-data) has read permissions for all project files.
-Set write permissions if additional file operations are added.
+The application uses a single `tasks` table with the following structure:
 
+| Column | Type | Description |
+|--------|------|-------------|
+| id | INT (Primary Key) | Auto-incrementing task ID |
+| text | VARCHAR(255) | Task description |
+| completed | TINYINT(1) | Completion status (0 or 1) |
+| created_at | TIMESTAMP | Creation timestamp |
+| updated_at | TIMESTAMP | Last update timestamp |
 
-Access the Application
+## Frontend Features
 
-Navigate to http://your-server/kerwindows_task_manager/index.html in a web browser.
+- **Vue.js 3**: Modern reactive framework
+- **Axios**: HTTP client for API requests
+- **CSS Variables**: Theme switching support
+- **Responsive Design**: Mobile-first approach
+- **Local Storage**: Theme preference persistence
 
+## Browser Support
 
+- Chrome 60+
+- Firefox 55+
+- Safari 12+
+- Edge 79+
 
-Usage
+## Troubleshooting
 
-Add a Task: Enter text in the input field and click "Add" or press Enter.
-Edit a Task: Click "Edit" on a task, modify the text, and click "Save" or "Cancel".
-Delete a Task: Click "Delete" to remove a task.
-Complete a Task: Click the checkbox next to a task to mark it as completed.
-Toggle Theme: Click the sun/moon icon in the header to switch between dark and light modes.
+### Common Issues
 
-API Endpoints
-The backend (api.php) provides the following RESTful endpoints:
+**1. Database Connection Failed**
+- Verify database credentials in `api.php`
+- Ensure MySQL service is running
+- Check if the database and user exist
 
-GET /api.php: Fetch all tasks.
-POST /api.php: Create a new task (JSON: { "text": "task description" }).
-PUT /api.php?id={id}: Update a task (JSON: { "text": "updated text", "completed": true/false }).
-DELETE /api.php?id={id}: Delete a task.
+**2. CORS Errors**
+- The API includes CORS headers for cross-origin requests
+- If issues persist, check your server's CORS configuration
 
-Notes
+**3. Tasks Not Loading**
+- Check browser console for JavaScript errors
+- Verify the API endpoint URL in `index.html`
+- Ensure PHP and MySQL are properly configured
 
-The frontend uses vanilla JavaScript with no external dependencies.
-The application assumes a MySQL database with UTF-8 encoding.
-CORS is enabled in api.php for local development; adjust headers for production.
-The tasks table includes indexes for completed and created_at for better query performance.
+**4. Theme Not Persisting**
+- Check if localStorage is enabled in your browser
+- Clear browser cache and cookies
 
-Troubleshooting
+### Debug Mode
 
-Database Connection Errors: Verify MySQL credentials in api.php and ensure the database server is running.
-CORS Issues: Check browser console for errors and adjust Access-Control-Allow-Origin in api.php.
-Tasks Not Loading: Ensure api.php is accessible and the database is properly set up.
-PHP Errors: Check Apache error logs (e.g., /var/log/apache2/error.log).
+To enable error reporting, add this to the top of `api.php`:
+```php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+```
 
-License
-This project is for personal use and not licensed for distribution.
-Contact
-For issues or questions, please contact the project maintainer.
+## Security Considerations
+
+- The application includes basic input validation and prepared statements
+- For production use, consider adding:
+  - User authentication
+  - Rate limiting
+  - Input sanitization enhancements
+  - HTTPS enforcement
+  - Database user with minimal privileges
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is open source. Feel free to use, modify, and distribute as needed.
+
+## Support
+
+For issues or questions:
+1. Check the troubleshooting section above
+2. Review server error logs
+3. Check browser console for client-side errors
+
+---
+
+**Enjoy managing your tasks! 📝✅**
